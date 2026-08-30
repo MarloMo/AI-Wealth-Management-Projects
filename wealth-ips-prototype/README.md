@@ -1,20 +1,19 @@
 # wealth-ips-prototype
 
-Hypothetical advisor prototype: risk intake, model allocation, IPS draft, human approval. Fictional data only. Not a client product. Not investment advice.
+Fictional robo-advisor simulation: questionnaire, automatic model mix, paper account, auto-rebalance. Paper money only. Not a client product. Not investment advice. Not an offer.
 
-This repository is a **portfolio sample** for recruiters evaluating an advisor who can apply AI/software to wealth-management work. Nobody logs in. There is no client data. It does not place trades and it does not make a recommendation.
+This is a **portfolio sample**. Nobody logs in. No real account is opened. No trades are sent.
 
-## What v1 does
+## What the robo does
 
-1. Collects a *hypothetical* investor’s goal, time horizon, liquidity needs, and risk tolerance.
-2. Classifies that profile into Conservative / Moderate / Aggressive with a **documented point system** (not a black-box model).
-3. Maps the category to a model mix in `data/model_portfolios.csv`.
-4. Drafts a short investment-policy summary.
-5. Hides the final packet until a human clicks **Approve**.
+1. Collects a hypothetical investor’s goal, time horizon, liquidity needs, and risk tolerance.
+2. **Automatically** assigns Conservative / Moderate / Aggressive from a documented point system.
+3. Funds a fictional **$100,000 paper account** at the target mix.
+4. Lets you simulate a month of returns (random) or apply a canned equity selloff.
+5. **Auto-rebalances** when any sleeve drifts 5 percentage points from target.
+6. Shows canned market-stress math on the target mix.
 
-Rebalancing, market-stress tests, and PyPortfolioOpt are **not** in v1.
-
-## Classification rules (transparent)
+## Classification rules
 
 Each answer adds points. Max score is 7.
 
@@ -24,40 +23,24 @@ Each answer adds points. Max score is 7.
 | Tolerance: low / medium / high | 0 / 1 / 2 |
 | Liquidity: cash <2 years / 2–5 years / 5+ years | 0 / 1 / 2 |
 
-- 0–2 Conservative  
-- 3–4 Moderate  
-- 5–7 Aggressive  
+- 0–2 Conservative
+- 3–4 Moderate
+- 5–7 Aggressive
 
-This is a demo mapping, **not** a suitability determination.
+Not a suitability determination.
 
 ## Run it
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+cd ~/Codes/AI-Wealth-Management-Projects/wealth-ips-prototype
+source .venv/bin/activate
 streamlit run app.py
 ```
 
-Click **Load sample: Jordan Hale (fictional)** to demo in 30 seconds.
-
-## Stack
-
-- Python
-- Streamlit
-- pandas
-- CSV model portfolios
+Click **Use sample: Jordan Hale (fictional)**, then **Open paper account**.
 
 ## Compliance
 
-- Fictional names and goals only.
-- Not investment advice, not a recommendation, not an offer.
+- Fictional names and paper dollars only.
 - Not affiliated with Merrill, Bank of America, or any employer.
-- A human reviewer must approve before the final packet is shown.
-- See the SEC investor bulletin on [robo-advisers](https://www.sec.gov/investor/alerts/robo-advisers.htm) for why disclosures and human oversight matter.
-
-## v2 (not built)
-
-- Rebalancing illustration
-- Market-stress scenarios
-- Optional PyPortfolioOpt math, still with human approval
+- See the SEC investor bulletin on [robo-advisers](https://www.sec.gov/investor/alerts/robo-advisers.htm).

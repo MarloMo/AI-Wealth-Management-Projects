@@ -1,113 +1,159 @@
-"""Streamlit demo. Final IPS is hidden until a human clicks Approve."""
+"""Fictional robo-advisor demo. Paper money only. Not an offer."""
 
 from __future__ import annotations
+
+import random
 
 import streamlit as st
 
 from engine import (
+    DEMO_VALUE,
     HORIZON_POINTS,
     JORDAN_HALE,
     LIQUIDITY_POINTS,
+    REBALANCE_BAND_PCT,
+    STRESS_SCENARIOS,
     TOLERANCE_POINTS,
     InvestorInput,
-    approved_packet,
+    Mix,
+    apply_returns,
+    auto_rebalance,
     build_draft,
-    load_allocations,
+    max_drift_pct,
+    needs_rebalance,
+    open_paper_account,
+    rebalance_trades,
+    stress_table,
 )
 
 DISCLAIMER = (
-    "FICTIONAL DEMO. Not investment advice. Not a recommendation. "
-    "Not a client product. Hypothetical data only. "
-    "A human must click Approve before the final IPS packet is shown."
+    "FICTIONAL ROBO-ADVISOR SIMULATION. Paper money only. "
+    "Not an offer. Not investment advice. Not a client product. "
+    "No real account is opened and no trades are sent."
 )
 
-st.set_page_config(page_title="Wealth IPS Prototype", layout="centered")
-st.title("Wealth IPS Prototype")
-st.caption("Hypothetical advisor workstation — recruiter sample, not a live tool.")
+st.set_page_config(page_title="Fictional Robo-Advisor", layout="centered")
+st.title("Fictional robo-advisor")
+st.caption("Questionnaire → automatic mix → paper account → auto-rebalance. Recruiter demo.")
 st.warning(DISCLAIMER)
 
-if "approved" not in st.session_state:
-    st.session_state.approved = False
+if "account" not in st.session_state:
+    st.session_state.account = None
 if "draft" not in st.session_state:
     st.session_state.draft = None
+if "log" not in st.session_state:
+    st.session_state.log = []
 
-if st.button("Load sample: Jordan Hale (fictional)"):
-    st.session_state.approved = False
-    st.session_state.prefill = True
 
-prefill = st.session_state.get("prefill", False)
-sample = JORDAN_HALE if prefill else None
+def log(msg: str) -> None:
+    st.session_state.log.insert(0, msg)
 
-st.subheader("1. Hypothetical investor")
-name = st.text_input("Name (fictional)", value=sample.name if sample else "")
-goal = st.text_input("Goal", value=sample.goal if sample else "")
-horizon = st.selectbox(
-    "Time horizon",
-    list(HORIZON_POINTS),
-    index=list(HORIZON_POINTS).index(sample.horizon) if sample else 0,
-)
-liquidity = st.selectbox(
-    "Liquidity needs",
-    list(LIQUIDITY_POINTS),
-    index=list(LIQUIDITY_POINTS).index(sample.liquidity) if sample else 0,
-)
-tolerance = st.selectbox(
-    "Risk tolerance",
-    list(TOLERANCE_POINTS),
-    index=list(TOLERANCE_POINTS).index(sample.tolerance) if sample else 0,
-)
 
-if st.button("Build draft", type="primary"):
-    if not name.strip() or not goal.strip():
-        st.error("Enter a fictional name and a goal.")
-    else:
-        inp = InvestorInput(
-            name=name.strip(),
-            goal=goal.strip(),
-            horizon=horizon,
-            liquidity=liquidity,
-            tolerance=tolerance,
-        )
-        st.session_state.draft = build_draft(inp)
-        st.session_state.approved = False
+def target_mix() -> Mix:
+    d = st.session_state.draft
+    return Mix(d.stocks_pct, d.bonds_pct, d.cash_pct)
 
-draft = st.session_state.draft
-if draft is None:
-    st.info("Fill in a fictional investor and click Build draft.")
+
+if st.session_state.account is None:
+    st.subheader("Open a demo account")
+    if st.button("Use sample: Jordan Hale (fictional)"):
+        st.session_state.prefill = True
+
+    prefill = st.session_state.get("prefill", False)
+    sample = JORDAN_HALE if prefill else None
+
+    name = st.text_input("Name (fictional)", value=sample.name if sample else "")
+    goal = st.text_input("Goal", value=sample.goal if sample else "")
+    horizon = st.selectbox(
+        "Time horizon",
+        list(HORIZON_POINTS),
+        index=list(HORIZON_POINTS).index(sample.horizon) if sample else 0,
+    )
+    liquidity = st.selectbox(
+        "Liquidity needs",
+        list(LIQUIDITY_POINTS),
+        index=list(LIQUIDITY_POINTS).index(sample.liquidity) if sample else 0,
+    )
+    tolerance = st.selectbox(
+        "Risk tolerance",
+        list(TOLERANCE_POINTS),
+        index=list(TOLERANCE_POINTS).index(sample.tolerance) if sample else 0,
+    )
+
+    if st.button("Open paper account", type="primary"):
+        if not name.strip() or not goal.strip():
+            st.error("Enter a fictional name and a goal.")
+        else:
+            inp = InvestorInput(name.strip(), goal.strip(), horizon, liquidity, tolerance)
+            draft = build_draft(inp)
+            mix = Mix(draft.stocks_pct, draft.bonds_pct, draft.cash_pct)
+            st.session_state.draft = draft
+            st.session_state.account = open_paper_account(mix, DEMO_VALUE)
+            st.session_state.log = [
+                f"Opened paper account for {inp.name} with ${DEMO_VALUE:,.0f}. "
+                f"Robo assigned {draft.category}: {mix.stocks_pct}/{mix.bonds_pct}/{mix.cash_pct}."
+            ]
+            st.rerun()
     st.stop()
 
-st.subheader("2. Draft (not final)")
-st.write(f"**Proposed category:** {draft.category}")
-st.write(draft.score_breakdown)
-st.write("**Proposed model allocation**")
+draft = st.session_state.draft
+account = st.session_state.account
+tgt = target_mix()
+current = account.as_mix()
+drift = max_drift_pct(account, tgt)
+rebalance_due = needs_rebalance(account, tgt)
+
+st.subheader("Paper account")
+st.write(f"**Assigned sleeve:** {draft.category}")
+st.write(draft.explanation)
+m1, m2, m3 = st.columns(3)
+m1.metric("Paper value", f"${account.value:,.0f}")
+m2.metric("Max drift vs target", f"{drift:.0f} pp")
+m3.metric("Rebalance band", f"{REBALANCE_BAND_PCT:.0f} pp")
+
+st.write("**Holdings vs target**")
 st.dataframe(
-    load_allocations().loc[[draft.category], ["stocks_pct", "bonds_pct", "cash_pct"]],
-    hide_index=False,
-)
-st.bar_chart(
-    {
-        "Stocks": draft.stocks_pct,
-        "Bonds": draft.bonds_pct,
-        "Cash": draft.cash_pct,
-    }
+    rebalance_trades(current, tgt, account.value),
+    hide_index=True,
 )
 
-st.subheader("3. Human approval")
-col_a, col_b = st.columns(2)
-with col_a:
-    if st.button("Approve"):
-        st.session_state.approved = True
-with col_b:
-    if st.button("Reject"):
-        st.session_state.approved = False
-        st.session_state.draft = None
+st.subheader("Robo actions")
+c1, c2, c3 = st.columns(3)
+with c1:
+    if st.button("Simulate one month"):
+        stock_r = random.uniform(-0.04, 0.05)
+        bond_r = random.uniform(-0.015, 0.015)
+        st.session_state.account = apply_returns(account, stock_r, bond_r, 0.001)
+        log(f"Simulated month: stocks {stock_r:+.1%}, bonds {bond_r:+.1%}.")
+        st.rerun()
+with c2:
+    if st.button("Apply equity selloff"):
+        s = STRESS_SCENARIOS["Equity selloff"]
+        st.session_state.account = apply_returns(account, s["stocks"], s["bonds"], s["cash"])
+        log("Applied canned equity selloff shock.")
+        st.rerun()
+with c3:
+    if st.button("Auto-rebalance", type="primary", disabled=not rebalance_due):
+        before = account.value
+        st.session_state.account = auto_rebalance(account, tgt)
+        log(f"Auto-rebalanced to target. Paper value ${before:,.0f}.")
         st.rerun()
 
-st.subheader("4. Final IPS packet")
-if st.session_state.approved:
-    st.success("Approved in this demo session. Still not investment advice.")
-    st.code(approved_packet(draft), language="text")
+if rebalance_due:
+    st.info("Drift is at or past the 5 point band. The robo would rebalance. Click Auto-rebalance.")
 else:
-    st.error("Final packet is locked until a human clicks Approve.")
-    with st.expander("Preview draft text (not the final packet)"):
-        st.code(draft.ips_text, language="text")
+    st.caption("Drift is inside the band, so the robo holds.")
+
+st.subheader("Stress on the target mix")
+st.dataframe(stress_table(tgt, account.value), hide_index=True)
+
+st.subheader("Activity log")
+for line in st.session_state.log:
+    st.write(f"- {line}")
+
+if st.button("Close demo account"):
+    st.session_state.account = None
+    st.session_state.draft = None
+    st.session_state.log = []
+    st.session_state.prefill = False
+    st.rerun()
