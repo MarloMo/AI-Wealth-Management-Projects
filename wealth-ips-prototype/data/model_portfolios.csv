@@ -1,0 +1,4 @@
+risk_category,stocks_pct,bonds_pct,cash_pct,notes
+Conservative,30,60,10,Shorter horizon or high liquidity need
+Moderate,60,35,5,Balanced growth with a bond cushion
+Aggressive,85,10,5,Long horizon and high risk tolerance
