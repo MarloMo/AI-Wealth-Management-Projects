@@ -6,4 +6,4 @@ This repository is a portfolio, not a product. It is meant for recruiters and fi
 
 ## Projects
 
-- [`wealth-ips-prototype`](wealth-ips-prototype/) — Fictional robo-advisor: questionnaire, automatic mix, paper account, auto-rebalance. Paper money only.
+- [`wealth-robo-advisor`](wealth-robo-advisor/) — Fictional robo-advisor: questionnaire, automatic mix, paper account, auto-rebalance. Paper money only.
