@@ -1,4 +1,4 @@
-# wealth-ips-prototype
+# wealth-robo-advisor
 
 Fictional robo-advisor simulation: questionnaire, automatic model mix, paper account, auto-rebalance. Paper money only. Not a client product. Not investment advice. Not an offer.
 
@@ -32,7 +32,7 @@ Not a suitability determination.
 ## Run it
 
 ```bash
-cd ~/Codes/AI-Wealth-Management-Projects/wealth-ips-prototype
+cd ~/Codes/AI-Wealth-Management-Projects/wealth-robo-advisor
 source .venv/bin/activate
 streamlit run app.py
 ```
