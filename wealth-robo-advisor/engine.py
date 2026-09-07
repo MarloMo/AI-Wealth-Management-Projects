@@ -244,6 +244,39 @@ JORDAN_HALE = InvestorInput(
     tolerance="Medium — some ups and downs",
 )
 
+# Additional fictional samples so recruiters can compare sleeves.
+# Scores: Avery 0 → Conservative, Casey 3 → Moderate, Jordan 5 → Aggressive, Riley 7 → Aggressive.
+AVERY_NGUYEN = InvestorInput(
+    name="Avery Nguyen (fictional)",
+    goal="Keep a down-payment fund steady over the next few years",
+    horizon="Under 5 years",
+    liquidity="Need cash in under 2 years",
+    tolerance="Low — protect principal",
+)
+
+CASEY_ORTIZ = InvestorInput(
+    name="Casey Ortiz (fictional)",
+    goal="Grow a taxable brokerage balance with moderate risk",
+    horizon="5–10 years",
+    liquidity="Might need some cash in 2–5 years",
+    tolerance="Medium — some ups and downs",
+)
+
+RILEY_CHEN = InvestorInput(
+    name="Riley Chen (fictional)",
+    goal="Long-horizon retirement accumulation, comfortable with large swings",
+    horizon="20+ years",
+    liquidity="Unlikely to need this money for 5+ years",
+    tolerance="High — large swings are acceptable",
+)
+
+SAMPLE_CLIENTS: dict[str, InvestorInput] = {
+    "Avery Nguyen (Conservative)": AVERY_NGUYEN,
+    "Casey Ortiz (Moderate)": CASEY_ORTIZ,
+    "Jordan Hale (Aggressive)": JORDAN_HALE,
+    "Riley Chen (Aggressive)": RILEY_CHEN,
+}
+
 # Drifted mix for the sample so rebalance is visible.
 JORDAN_HALE_CURRENT = Mix(stocks_pct=92, bonds_pct=5, cash_pct=3)
 

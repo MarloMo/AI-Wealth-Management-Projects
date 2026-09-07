@@ -49,3 +49,17 @@ Approximate paper P&L on the Aggressive target (not a forecast):
 | Inflation scare | about −9.1% |
 
 Still not investment advice. Not an offer. Not a client product.
+
+
+## Compare fictional samples
+
+Same fixed rubric for every fictional client: **total = horizon + risk + liquidity** (max 7).
+
+| Sample | Horizon | Risk | Liquidity | Score | Sleeve |
+| --- | --- | --- | --- | --- | --- |
+| Avery Nguyen | Under 5 (0) | Low (0) | Need cash &lt;2y (0) | 0 | Conservative |
+| Casey Ortiz | 5–10 (1) | Medium (1) | Might need 2–5y (1) | 3 | Moderate |
+| Jordan Hale | 10–20 (2) | Medium (1) | Unlikely 5+y (2) | 5 | Aggressive |
+| Riley Chen | 20+ (3) | High (2) | Unlikely 5+y (2) | 7 | Aggressive |
+
+In the app, use the **Sample:** buttons, watch the live score line, then **Open paper account**.
