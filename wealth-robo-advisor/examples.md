@@ -1,26 +1,51 @@
 # Example run (fictional)
 
-No real client data.
+Walkthrough of the Streamlit demo. No real client data. Not investment advice.
 
-## Inputs
+## 1. Open the sample account
 
-- Name: Jordan Hale (fictional)
-- Goal: Retirement income in about 18 years
-- Time horizon: 10–20 years (2 pts)
-- Liquidity: Unlikely to need this money for 5+ years (2 pts)
-- Risk tolerance: Medium — some ups and downs (1 pt)
-- Current mix (drifted): 92% stocks / 5% bonds / 3% cash
+Click **Use sample: Jordan Hale (fictional)**, then **Open paper account**.
 
-## Engine result
+| Field | Sample value | Points |
+| --- | --- | --- |
+| Name | Jordan Hale (fictional) | — |
+| Goal | Retirement income in about 18 years | — |
+| Time horizon | 10–20 years | 2 |
+| Liquidity | Unlikely to need this money for 5+ years | 2 |
+| Risk tolerance | Medium — some ups and downs | 1 |
 
-- Score: 5 / 7
-- Category: Aggressive
-- Target mix: 85% stocks / 10% bonds / 5% cash
-- Rebalance on a fictional $100,000: sell $7,000 stocks, buy $5,000 bonds, buy $2,000 cash
-- Stress on the *target* mix (examples): equity selloff about −16.8%; rates shock about −5.1%; inflation scare about −9.1%
+**Engine result:** score **5 / 7** → **Aggressive** → target mix **85% stocks / 10% bonds / 5% cash**.
 
-## Human step
+The paper account starts at that target mix with fictional **$100,000**.
 
-Draft, rebalance table, and stress table are visible. Final IPS packet stays locked until **Approve**.
+## 2. Move the account (demo actions)
 
-Still not investment advice.
+| Button | What it does |
+| --- | --- |
+| **Simulate one month** | Applies random paper returns to stocks/bonds (tiny cash yield). |
+| **Apply equity selloff** | Applies a canned shock so holdings drift from target. |
+| **Auto-rebalance** | Enabled when any sleeve is **5+ percentage points** from target; resets to the assigned mix. |
+
+Activity shows in the on-screen log. **Close demo account** clears session state.
+
+## 3. Illustration: drifted mix → rebalance
+
+If holdings were drifted to **92% / 5% / 3%** vs the Aggressive target **85% / 10% / 5%** on $100,000 paper:
+
+| Sleeve | Action |
+| --- | --- |
+| Stocks | Sell $7,000 |
+| Bonds | Buy $5,000 |
+| Cash | Buy $2,000 |
+
+## 4. Stress on the *target* mix (canned math)
+
+Approximate paper P&L on the Aggressive target (not a forecast):
+
+| Scenario | Est. change |
+| --- | --- |
+| Equity selloff | about −16.8% |
+| Rates shock | about −5.0% |
+| Inflation scare | about −9.1% |
+
+Still not investment advice. Not an offer. Not a client product.
