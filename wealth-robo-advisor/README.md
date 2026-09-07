@@ -44,7 +44,7 @@ pip install -r requirements.txt   # first time
 streamlit run app.py
 ```
 
-Click **Use sample: Jordan Hale (fictional)**, then **Open paper account**.
+Click a **Sample:** button (Avery / Casey / Jordan / Riley), check the live score, then **Open paper account**.
 
 ## Layout
 

@@ -9,9 +9,9 @@ import streamlit as st
 from engine import (
     DEMO_VALUE,
     HORIZON_POINTS,
-    JORDAN_HALE,
     LIQUIDITY_POINTS,
     REBALANCE_BAND_PCT,
+    SAMPLE_CLIENTS,
     STRESS_SCENARIOS,
     TOLERANCE_POINTS,
     InvestorInput,
@@ -19,6 +19,7 @@ from engine import (
     apply_returns,
     auto_rebalance,
     build_draft,
+    category_from_score,
     max_drift_pct,
     needs_rebalance,
     open_paper_account,
@@ -56,11 +57,18 @@ def target_mix() -> Mix:
 
 if st.session_state.account is None:
     st.subheader("Open a demo account")
-    if st.button("Use sample: Jordan Hale (fictional)"):
-        st.session_state.prefill = True
+    st.caption("Pick a fictional sample to compare scores, or fill the form yourself.")
 
-    prefill = st.session_state.get("prefill", False)
-    sample = JORDAN_HALE if prefill else None
+    cols = st.columns(2)
+    labels = list(SAMPLE_CLIENTS.keys())
+    for i, label in enumerate(labels):
+        with cols[i % 2]:
+            if st.button(f"Sample: {label}", key=f"sample_{i}"):
+                st.session_state.sample_key = label
+                st.rerun()
+
+    sample_key = st.session_state.get("sample_key")
+    sample = SAMPLE_CLIENTS.get(sample_key) if sample_key else None
 
     name = st.text_input("Name (fictional)", value=sample.name if sample else "")
     goal = st.text_input("Goal", value=sample.goal if sample else "")
@@ -78,6 +86,17 @@ if st.session_state.account is None:
         "Risk tolerance",
         list(TOLERANCE_POINTS),
         index=list(TOLERANCE_POINTS).index(sample.tolerance) if sample else 0,
+    )
+
+    # Live score from the same fixed rubric as the engine.
+    h_pts = HORIZON_POINTS[horizon]
+    r_pts = TOLERANCE_POINTS[tolerance]
+    l_pts = LIQUIDITY_POINTS[liquidity]
+    live_total = h_pts + r_pts + l_pts
+    live_category = category_from_score(live_total)
+    st.info(
+        f"**Live score:** {h_pts} (horizon) + {r_pts} (risk) + {l_pts} (liquidity) "
+        f"= **{live_total} / 7** → **{live_category}**"
     )
 
     if st.button("Open paper account", type="primary"):
@@ -155,5 +174,5 @@ if st.button("Close demo account"):
     st.session_state.account = None
     st.session_state.draft = None
     st.session_state.log = []
-    st.session_state.prefill = False
+    st.session_state.sample_key = None
     st.rerun()
