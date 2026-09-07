@@ -1,46 +1,62 @@
 # wealth-robo-advisor
 
-Fictional robo-advisor simulation: questionnaire, automatic model mix, paper account, auto-rebalance. Paper money only. Not a client product. Not investment advice. Not an offer.
+Fictional Streamlit robo-advisor for recruiters. Questionnaire → automatic model mix → $100k paper account → simulate / shock → auto-rebalance.
 
-This is a **portfolio sample**. Nobody logs in. No real account is opened. No trades are sent.
+**Portfolio sample only.** Nobody logs in. No real account. No trades. Not investment advice. Not an offer. Not affiliated with Merrill, Bank of America, or any employer.
 
-## What the robo does
+## Why this is here
 
-1. Collects a hypothetical investor’s goal, time horizon, liquidity needs, and risk tolerance.
-2. **Automatically** assigns Conservative / Moderate / Aggressive from a documented point system.
-3. Funds a fictional **$100,000 paper account** at the target mix.
-4. Lets you simulate a month of returns (random) or apply a canned equity selloff.
-5. **Auto-rebalances** when any sleeve drifts 5 percentage points from target.
-6. Shows canned market-stress math on the target mix.
+Shows an advisor-built demo of rule-based sleeve assignment, drift, and rebalance — plain Python, documented scoring, human-readable UI. Recruiters can run it locally in minutes.
+
+## Demo flow
+
+1. Hypothetical goal, horizon, liquidity, risk tolerance
+2. Point system assigns Conservative / Moderate / Aggressive
+3. Funds a fictional **$100,000** paper account at the target mix
+4. **Simulate one month** (random) or **Apply equity selloff** (canned)
+5. **Auto-rebalance** when any sleeve drifts **5 percentage points** from target
+6. Stress table on the *target* mix (illustrative math)
+
+See [`examples.md`](examples.md) for the Jordan Hale walkthrough.
 
 ## Classification rules
 
-Each answer adds points. Max score is 7.
+Max score **7**. Not a suitability determination.
 
 | Input | Points |
 | --- | --- |
 | Horizon: under 5 / 5–10 / 10–20 / 20+ years | 0 / 1 / 2 / 3 |
 | Tolerance: low / medium / high | 0 / 1 / 2 |
-| Liquidity: cash <2 years / 2–5 years / 5+ years | 0 / 1 / 2 |
+| Liquidity: cash need <2 / 2–5 / 5+ years | 0 / 1 / 2 |
 
-- 0–2 Conservative
-- 3–4 Moderate
-- 5–7 Aggressive
-
-Not a suitability determination.
+| Score | Sleeve | Model mix (stocks / bonds / cash) |
+| --- | --- | --- |
+| 0–2 | Conservative | 30 / 60 / 10 |
+| 3–4 | Moderate | 60 / 35 / 5 |
+| 5–7 | Aggressive | 85 / 10 / 5 |
 
 ## Run it
 
 ```bash
 cd ~/Codes/AI-Wealth-Management-Projects/wealth-robo-advisor
 source .venv/bin/activate
+pip install -r requirements.txt   # first time
 streamlit run app.py
 ```
 
 Click **Use sample: Jordan Hale (fictional)**, then **Open paper account**.
 
+## Layout
+
+| Path | Role |
+| --- | --- |
+| `app.py` | Streamlit UI |
+| `engine.py` | Scoring, paper account, rebalance, stress |
+| `data/model_portfolios.csv` | Sleeve mixes |
+| `examples.md` | Sample walkthrough |
+
 ## Compliance
 
-- Fictional names and paper dollars only.
-- Not affiliated with Merrill, Bank of America, or any employer.
-- See the SEC investor bulletin on [robo-advisers](https://www.sec.gov/investor/alerts/robo-advisers.htm).
+- Fictional names and paper dollars only
+- Not a client product and not investment advice
+- SEC investor bulletin on [robo-advisers](https://www.sec.gov/investor/alerts/robo-advisers.htm)
