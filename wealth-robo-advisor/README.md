@@ -1,6 +1,6 @@
 # wealth-robo-advisor
 
-Fictional Streamlit robo-advisor for recruiters. Questionnaire → automatic model mix → $100k paper account → simulate / shock → auto-rebalance.
+Fictional Streamlit robo-advisor for recruiters. Questionnaire → automatic model mix → $100k paper account → simulate month / shock → auto-rebalance.
 
 **Portfolio sample only.** Nobody logs in. No real account. No trades. Not investment advice. Not an offer. Not affiliated with Merrill, Bank of America, or any employer.
 
@@ -14,8 +14,8 @@ Shows an advisor-built demo of rule-based sleeve assignment, drift, and rebalanc
 2. Point system assigns Conservative / Moderate / Aggressive
 3. Funds a fictional **$100,000** paper account at the target mix
 4. **Simulate one month** (random) or **Apply equity selloff** (canned)
-5. **Auto-rebalance** when any sleeve drifts **5 percentage points** from target
-6. Stress table on the *target* mix (illustrative math)
+5. **Auto-rebalances automatically** when any sleeve drifts **5 percentage points** from target (manual **Rebalance now** still available)
+6. Holdings table, paper value growth chart over demo actions, and stress metrics on the target mix
 
 See [`examples.md`](examples.md) for the Jordan Hale walkthrough.
 
