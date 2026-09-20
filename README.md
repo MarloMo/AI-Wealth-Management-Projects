@@ -5,3 +5,4 @@ Portfolio of AI projects for wealth management. Code samples for recruiters eval
 ## Projects
 
 - [`wealth-robo-advisor`](wealth-robo-advisor/) — Fictional Streamlit robo: questionnaire, automatic sleeve, $100k paper account, simulate/shock, 5pp auto-rebalance. Paper money only.
+- [`advisor-os`](advisor-os/) — AI chief-of-staff concept for advisors: synthetic book data, deterministic detection rules, explainable briefing / meeting prep. Research prototype only.
